@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Floating Stars Landing Page</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background: black;
+      font-family: Arial, sans-serif;
+    }
+
+    .landing-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 1s ease;
+    }
+
+    .landing-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .landing-button, .github-button {
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      color: white;
+      background: transparent;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+    }
+
+    .landing-button::before, .github-button::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      border-radius: 20px;
+      background: linear-gradient(270deg, #d1a8ff, #a188ff, #d1a8ff);
+      background-size: 400% 400%;
+      box-shadow: 0 0 20px 6px rgba(209, 168, 255, 0.7);
+      z-index: -1;
+      animation: borderGlow 6s ease infinite, borderShift 4s linear infinite;
+      mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      padding: 3px;
+    }
+
+    @keyframes borderShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes borderGlow {
+      0%, 100% {
+        box-shadow: 0 0 20px 6px rgba(209, 168, 255, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 30px 10px rgba(209, 168, 255, 1);
+      }
+    }
+
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh);
+        opacity: 0;
+      }
+    }
+
+    .content {
+      opacity: 0;
+      transition: opacity 1s ease;
+      position: relative;
+      z-index: 10;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .content.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <div class="landing-screen" id="landing">
+    <button class="landing-button" onclick="enterSite()">Click Anywhere</button>
+  </div>
+
+  <div class="content" id="mainContent">
+    <h1>Welcome to the Site</h1>
+    <p>This is the main content that appears after the landing screen fades.</p>
+    <a href="./settings" target="_blank">
+      <button class="github-button">Open GitHub File</button>
+    </a>
+  </div>
+
+  <script>
+    // Generate stars
+    const starsContainer = document.querySelector('.stars');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = `${Math.random() * 100}vw`;
+      star.style.top = `${Math.random() * 100}vh`;
+      star.style.animationDuration = `${5 + Math.random() * 5}s`;
+      star.style.opacity = Math.random();
+      starsContainer.appendChild(star);
+    }
+
+    // Enter site
+    function enterSite() {
+      const landing = document.getElementById('landing');
+      const content = document.getElementById('mainContent');
+      landing.classList.add('fade-out');
+      setTimeout(() => {
+        content.classList.add('visible');
+      }, 1000);
+    }
+
+    // Allow clicking anywhere on landing screen to trigger button
+    document.getElementById('landing').addEventListener('click', enterSite);
+  </script>
+</body>
+</html>
