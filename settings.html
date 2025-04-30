@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Settings Page</title>
+  <title>Settings</title>
   <style>
     html, body {
       margin: 0;
@@ -165,44 +165,48 @@
   <button class="apply-button" onclick="applyChanges()">Apply Changes</button>
 
   <script>
-    let changesApplied = false;
+    let changesApplied = {
+      blankPage: false,
+      siteName: false,
+      imgApplied: false
+    };
 
-    // Option 1: Turn site into blank
+    // Option 1: Turn site into blank (Only change the title)
     function blankPage() {
       document.title = "about:blank";
-      document.body.innerHTML = ''; // Clears content
+      changesApplied.blankPage = true;
     }
 
     // Option 2: Change site name and image
     function changeSiteName() {
       document.title = "Home";
       const img = document.createElement("img");
-      img.src = "https://via.placeholder.com/300"; // Replace with your image URL
+      img.src = "https://raw.githubusercontent.com/str5pes/unblocker/refs/heads/main/Google_Classroom_Logo.png"; // Replace with your image URL
       img.alt = "New Site Image";
       img.style.maxWidth = "100%";
       document.body.appendChild(img);
+      changesApplied.siteName = true;
+      changesApplied.imgApplied = true;
     }
 
-    // Apply changes and redirect to main site
+    // Apply changes and reload main site
     function applyChanges() {
-      if (changesApplied) {
-        // If changes are already applied, reload the main site
-        window.location.href = "index.html"; // Redirect to main site (use your actual main page URL)
-      } else {
-        alert("No changes applied!");
+      // If any changes are made, save them to session storage and reload
+      if (changesApplied.blankPage) {
+        sessionStorage.setItem("siteTitle", "about:blank");
       }
+
+      if (changesApplied.siteName) {
+        sessionStorage.setItem("siteTitle", "Home");
+      }
+
+      if (changesApplied.imgApplied) {
+        sessionStorage.setItem("imgSrc", "https://raw.githubusercontent.com/str5pes/unblocker/refs/heads/main/Google_Classroom_Logo.png");
+      }
+
+      // Redirect to the main site and apply changes
+      window.location.href = "./Main"; // Replace with your main site URL
     }
-
-    // Flag changes as applied when an option is selected
-    function setChangesApplied() {
-      changesApplied = true;
-    }
-
-    // Set changes applied after clicking on options
-    document.querySelectorAll('button').forEach((button) => {
-      button.addEventListener('click', setChangesApplied);
-    });
-
   </script>
 </body>
 </html>
